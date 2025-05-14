@@ -1,9 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
-public class ChromeDino extends JPanel implements ActionListener {
+public class ChromeDino extends JPanel implements ActionListener, KeyListener {
     int boardWidth=800;
     int boardHeight=300;
 
@@ -14,7 +13,7 @@ public class ChromeDino extends JPanel implements ActionListener {
     Image cactus2Img;
     Image cactus3Img;
 
-    class Block{
+    static class Block{
         int x;
         int y;
         int width;
@@ -39,9 +38,15 @@ public class ChromeDino extends JPanel implements ActionListener {
     Block dino;
     Timer gameLoop;
 
+    //PHYSICS
+    int velocityY=0;
+    int gravity=1;
+
     public ChromeDino(){
         setPreferredSize(new Dimension(boardWidth,boardHeight));
         setBackground(Color.lightGray);
+        setFocusable(true);
+        addKeyListener(this);
 
         dinoImg=new ImageIcon(getClass().getResource("./img/dino-run.gif")).getImage();
         dinoDeadImg=new ImageIcon(getClass().getResource("./img/dino-dead.png")).getImage();
@@ -54,7 +59,8 @@ public class ChromeDino extends JPanel implements ActionListener {
         dino=new Block(dinoX,dinoY,dinoWidth,dinoHeight,dinoImg);
 
         //GAME TIMER
-        gameLoop=new Timer(1000/60,this);
+        gameLoop=new Timer(1000/60,this); // 60 FPS
+        gameLoop.start();
     }
 
     public void paintComponent(Graphics g){
@@ -66,8 +72,32 @@ public class ChromeDino extends JPanel implements ActionListener {
         g.drawImage(dino.img,dino.x,dino.y,dino.width,dino.height,null);
     }
 
+    public void move(){
+        //dino
+        velocityY += gravity;
+        dino.y += velocityY;
+        if(dino.y>dinoY){
+            dino.y=dinoY;
+            velocityY=0;
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        move();
+        repaint();
     }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode()==KeyEvent.VK_SPACE){
+            velocityY = -17;
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyReleased(KeyEvent e) {}
 }
