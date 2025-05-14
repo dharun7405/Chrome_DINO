@@ -131,7 +131,18 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
         for(int i=0;i<cactusArray.size();i++){
             Block cactus =cactusArray.get(i);
             cactus.x += velocityX;
+
+            if(collision(dino,cactus)){
+                dino.img=dinoDeadImg;
+            }
         }
+    }
+
+    boolean collision(Block a,Block b){
+        return  a.x < b.x + b.width &&
+                a.x + a.width > b.x &&
+                a.y < b.y + b.height &&
+                a.y + a.height >b.y;
     }
 
     @Override
