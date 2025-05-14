@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Objects;
 
 public class ChromeDino extends JPanel implements ActionListener, KeyListener {
     int boardWidth=800;
@@ -48,12 +49,12 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
         setFocusable(true);
         addKeyListener(this);
 
-        dinoImg=new ImageIcon(getClass().getResource("./img/dino-run.gif")).getImage();
-        dinoDeadImg=new ImageIcon(getClass().getResource("./img/dino-dead.png")).getImage();
-        dinoJumpImg=new ImageIcon(getClass().getResource("./img/dino-jump.png")).getImage();
-        cactus1Img=new ImageIcon(getClass().getResource("./img/cactus1.png")).getImage();
-        cactus2Img=new ImageIcon(getClass().getResource("./img/cactus2.png")).getImage();
-        cactus3Img=new ImageIcon(getClass().getResource("./img/cactus3.png")).getImage();
+        dinoImg=new ImageIcon(Objects.requireNonNull(getClass().getResource("./img/dino-run.gif"))).getImage();
+        dinoDeadImg=new ImageIcon(Objects.requireNonNull(getClass().getResource("./img/dino-dead.png"))).getImage();
+        dinoJumpImg=new ImageIcon(Objects.requireNonNull(getClass().getResource("./img/dino-jump.png"))).getImage();
+        cactus1Img=new ImageIcon(Objects.requireNonNull(getClass().getResource("./img/cactus1.png"))).getImage();
+        cactus2Img=new ImageIcon(Objects.requireNonNull(getClass().getResource("./img/cactus2.png"))).getImage();
+        cactus3Img=new ImageIcon(Objects.requireNonNull(getClass().getResource("./img/cactus3.png"))).getImage();
 
         //DINO
         dino=new Block(dinoX,dinoY,dinoWidth,dinoHeight,dinoImg);
@@ -79,6 +80,7 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
         if(dino.y>dinoY){
             dino.y=dinoY;
             velocityY=0;
+            dino.img=dinoImg;
         }
     }
 
@@ -91,7 +93,10 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode()==KeyEvent.VK_SPACE){
-            velocityY = -17;
+            if(dino.y==dinoY){
+                velocityY = -17;
+                dino.img=dinoJumpImg;
+            }
         }
     }
 
