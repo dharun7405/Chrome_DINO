@@ -54,6 +54,8 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
     int velocityX = -12;  // CACTUS SPEED
     int velocityY = 0;  // DINO JUMP SPEED
     int gravity = 1;
+    boolean gameOver=false;
+    int score = 0;
 
     public ChromeDino(){
         setPreferredSize(new Dimension(boardWidth,boardHeight));
@@ -80,13 +82,17 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
         placeCactusTimer=new Timer(1500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                placeCactus();
+                ChromeDino.this.placeCactus();
             }
         });
         placeCactusTimer.start();
     }
 
     void placeCactus(){
+        if(gameOver){
+            return;
+        }
+
         double placeCactusChance=Math.random(); // RANGE:0-0.99
         if(placeCactusChance > .90){   // 10% CHANCE
             Block cactus = new Block(cactusX,cactusY,cactus3Width,cactusHeight,cactus3Img);
@@ -111,9 +117,17 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
         //DINO
         g.drawImage(dino.img,dino.x,dino.y,dino.width,dino.height,null);
         //CACTUS
-        for(int i=0;i<cactusArray.size();i++){
-            Block cactus = cactusArray.get(i);
-            g.drawImage(cactus.img,cactus.x,cactus.y,cactus.width,cactus.height,null);
+        for (Block cactus : cactusArray) {
+            g.drawImage(cactus.img, cactus.x, cactus.y, cactus.width, cactus.height, null);
+        }
+        //SCORE
+        g.setColor(Color.black);
+        g.setFont(new Font("Arial",Font.PLAIN,32));
+        if(gameOver){
+            g.drawString("Game Over: "+ String.valueOf(score),10,35);
+        }
+        else{
+            g.drawString(String.valueOf(score),10,35);
         }
     }
 
@@ -128,14 +142,17 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
         }
 
         //CACTUS
-        for(int i=0;i<cactusArray.size();i++){
-            Block cactus =cactusArray.get(i);
+        for (Block cactus : cactusArray) {
             cactus.x += velocityX;
 
-            if(collision(dino,cactus)){
-                dino.img=dinoDeadImg;
+            if (collision(dino, cactus)) {
+                dino.img = dinoDeadImg;
+                gameOver = true;
             }
         }
+
+        //SCORE
+        score++;
     }
 
     boolean collision(Block a,Block b){
@@ -149,6 +166,10 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         move();
         repaint();
+        if(gameOver){
+            placeCactusTimer.stop();
+            gameLoop.stop();
+        }
     }
 
     @Override
