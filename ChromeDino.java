@@ -106,6 +106,9 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
             Block cactus=new Block(cactusX,cactusY,cactus1Width,cactusHeight,cactus1Img);
             cactusArray.add(cactus);
         }
+        if(cactusArray.size()>10){
+            cactusArray.removeFirst();
+        }
     }
 
     public void paintComponent(Graphics g){
@@ -178,6 +181,17 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
             if(dino.y==dinoY){
                 velocityY = -17;
                 dino.img=dinoJumpImg;
+            }
+
+            if(gameOver){
+                dino.y=dinoY;
+                dino.img=dinoImg;
+                velocityY=0;
+                cactusArray.clear();
+                score=0;
+                gameOver=false;
+                gameLoop.start();
+                placeCactusTimer.start();
             }
         }
     }
