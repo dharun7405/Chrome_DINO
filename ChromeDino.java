@@ -83,6 +83,7 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
                 placeCactus();
             }
         });
+        placeCactusTimer.start();
     }
 
     void placeCactus(){
@@ -127,6 +128,10 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
         }
 
         //CACTUS
+        for(int i=0;i<cactusArray.size();i++){
+            Block cactus =cactusArray.get(i);
+            cactus.x += velocityX;
+        }
     }
 
     @Override
