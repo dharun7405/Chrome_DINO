@@ -12,6 +12,7 @@ public class Main {
         frame.setResizable(false);
 
         ChromeDino chromeDino = new ChromeDino();
+        chromeDino.requestFocus();
         frame.add(chromeDino);
         frame.pack();
         frame.setVisible(true);
