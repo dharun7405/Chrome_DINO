@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ChromeDino extends JPanel implements ActionListener, KeyListener {
@@ -38,10 +39,21 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
 
     Block dino;
     Timer gameLoop;
+    Timer placeCactusTimer;
+
+    //CACTUS
+    int cactus1Width=34;
+    int cactus2Width=69;
+    int cactus3Width=102;
+    int cactusHeight=70;
+    int cactusX=700;
+    int cactusY=boardHeight-cactusHeight;
+    ArrayList<Block> cactusArray;
 
     //PHYSICS
-    int velocityY=0;
-    int gravity=1;
+    int velocityX = -12;  // CACTUS SPEED
+    int velocityY = 0;  // DINO JUMP SPEED
+    int gravity = 1;
 
     public ChromeDino(){
         setPreferredSize(new Dimension(boardWidth,boardHeight));
@@ -58,10 +70,35 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
 
         //DINO
         dino=new Block(dinoX,dinoY,dinoWidth,dinoHeight,dinoImg);
+        //CACTUS
+        cactusArray=new ArrayList<>();
 
         //GAME TIMER
         gameLoop=new Timer(1000/60,this); // 60 FPS
         gameLoop.start();
+        //CACTUS TIMER
+        placeCactusTimer=new Timer(1500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                placeCactus();
+            }
+        });
+    }
+
+    void placeCactus(){
+        double placeCactusChance=Math.random(); // RANGE:0-0.99
+        if(placeCactusChance > .90){   // 10% CHANCE
+            Block cactus = new Block(cactusX,cactusY,cactus3Width,cactusHeight,cactus3Img);
+            cactusArray.add(cactus);
+        }
+        else if(placeCactusChance >.70){  // 20% CHANCE
+            Block cactus=new Block(cactusX,cactusY,cactus2Width,cactusHeight,cactus2Img);
+            cactusArray.add(cactus);
+        }
+        else if(placeCactusChance > .50){  // 20% CHANCE
+            Block cactus=new Block(cactusX,cactusY,cactus1Width,cactusHeight,cactus1Img);
+            cactusArray.add(cactus);
+        }
     }
 
     public void paintComponent(Graphics g){
@@ -70,7 +107,13 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
     }
 
     public void draw(Graphics g){
+        //DINO
         g.drawImage(dino.img,dino.x,dino.y,dino.width,dino.height,null);
+        //CACTUS
+        for(int i=0;i<cactusArray.size();i++){
+            Block cactus = cactusArray.get(i);
+            g.drawImage(cactus.img,cactus.x,cactus.y,cactus.width,cactus.height,null);
+        }
     }
 
     public void move(){
@@ -82,6 +125,8 @@ public class ChromeDino extends JPanel implements ActionListener, KeyListener {
             velocityY=0;
             dino.img=dinoImg;
         }
+
+        //CACTUS
     }
 
     @Override
