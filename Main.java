@@ -16,5 +16,8 @@ public class Main {
         frame.add(chromeDino);
         frame.pack();
         frame.setVisible(true);
+
+        ImageIcon icon = new ImageIcon("./img/dino-dead.png");
+        frame.setIconImage(icon.getImage());
     }
 }
